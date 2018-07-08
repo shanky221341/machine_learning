@@ -12,6 +12,7 @@ class DataSummary:
         res = res.append(tmp2)
         res = res.append(tmp3)
         res.index = ['col_type', 'count_unique', 'values', 'missing_count']
+        res = res.append(data.describe())
         return res
 
     @staticmethod
