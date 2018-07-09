@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import pandas as pd
 
 
 class Visualization:
@@ -55,6 +56,20 @@ class Visualization:
     @staticmethod
     def createWordCloud():
         pass
+
+    @staticmethod
+    def visualizeModels(modelResults):
+        results = modelResults.results
+        for model in results.keys():
+            if model == 'KNN':
+                grid = results[model].modelResult
+                scores = pd.Series(grid.cv_results_['mean_test_score'])
+                k = len(grid.cv_results_['params'])
+                scores.index = range(1, k + 1)
+                print("{} Performance".format(model))
+                Visualization.createBarPlotSingleVar(scores, "Showing KNN performance", "Accuracy")
+            else:
+                print("Model not found to visualize")
 
     """
     This function takes dataframe, and list of feaures and returns all possible scatter plots between them
