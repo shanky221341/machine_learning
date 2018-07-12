@@ -33,3 +33,14 @@ class MissingValue:
         meanValues._columns = ['mean']
         dataTransformed.columns = data.columns
         return imputer, meanValues, dataTransformed
+
+    @staticmethod
+    def imupteMissingWithMedianValues(data):
+        imputer = Imputer(strategy="median")
+        imputer.fit(data)
+        dataTransformed = pd.DataFrame(imputer.transform(data))
+        meanValues = pd.DataFrame(imputer.statistics_)
+        meanValues.index = data.columns
+        meanValues._columns = ['median']
+        dataTransformed.columns = data.columns
+        return imputer, meanValues, dataTransformed

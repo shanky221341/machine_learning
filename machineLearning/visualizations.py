@@ -58,6 +58,11 @@ class Visualization:
         pass
 
     @staticmethod
+    def createSingleVarHistPlots(data, columns, size_h=15, size_w=15, sharex=False, sharey=False):
+        data[columns].hist(figsize=(size_h, size_w), sharex=sharex, sharey=sharey)
+        plt.show()
+
+    @staticmethod
     def visualizeModels(modelResults):
         results = modelResults.results
         for model in results.keys():
