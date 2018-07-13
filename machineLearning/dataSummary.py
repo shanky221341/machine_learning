@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 class DataSummary:
@@ -11,10 +12,21 @@ class DataSummary:
         res = res.append(tmp1)
         res = res.append(tmp2)
         res = res.append(tmp3)
-        res.index = ['col_type', 'count_unique', 'values', 'missing_count']
+        res.index = ['col_type', 'count_unique', 'unique_values', 'missing_count']
         a = data.describe()
         a.index = ['count', 'mean', 'std', 'min', '25%', '50%(median)', '75%', 'max']
         res = res.append(a)
+        # Find mode of categorical column
+        t = []
+        for col in data.columns:
+            if data[col].dtype == object:
+                t.append(data[col].mode().iloc[0])
+            else:
+                t.append(np.nan)
+        t = pd.DataFrame(t).transpose()
+        t.columns = data.columns
+        t.index = ['mode']
+        res = pd.concat([res, t], axis=0)
         return res
 
     @staticmethod
