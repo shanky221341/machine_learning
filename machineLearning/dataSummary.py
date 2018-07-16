@@ -42,11 +42,11 @@ class DataSummary:
             print("")
 
     @staticmethod
-    def returnFrequencyCounts(data, columns):
+    def returnFrequencyCounts(data, columns, normalize=False):
         f_count = {}
         for column in columns:
             d = data[column]
-            df = pd.DataFrame(d.value_counts())
+            df = pd.DataFrame(d.value_counts(normalize=normalize))
             df['col'] = df.index
             df.columns = ['count', column]
             df = df[[column, 'count']]

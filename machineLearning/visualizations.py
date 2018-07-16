@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import seaborn as sns
 
 class Visualization:
     """
@@ -56,6 +56,11 @@ class Visualization:
     @staticmethod
     def createWordCloud():
         pass
+
+    @staticmethod
+    def create_cor_plot(data):
+        sns.heatmap(data.corr())
+        plt.show()
 
     @staticmethod
     def createSingleVarHistPlots(data, columns, size_h=15, size_w=15, sharex=False, sharey=False):
