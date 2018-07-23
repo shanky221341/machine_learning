@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
+
 class Visualization:
     """
     This function takes two numeric variable and draws scatter plot between them.
@@ -10,8 +11,9 @@ class Visualization:
     """
 
     @staticmethod
-    def createScatterPlot():
-        pass
+    def createScatterPlot(x, y):
+        plt.scatter(x, y)
+        plt.show()
 
     @staticmethod
     def createBoxPlot():

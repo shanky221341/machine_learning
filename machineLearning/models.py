@@ -129,7 +129,11 @@ class Model:
         '''
 
         k_ = list(range(1, k + 1))
-        knn_params = {'classify__n_neighbors': k_}
+        # knn_params = {'classify__n_neighbors': k_}
+        knn_params = {'classify__n_neighbors': k_,
+                      'classify__leaf_size': [1, 2, 3, 5],
+                      'classify__weights': ['uniform', 'distance'],
+                      'classify__algorithm': ['auto', 'ball_tree', 'kd_tree', 'brute']}
         # must redefine params to fit the pipeline
         knn = KNeighborsClassifier()
         l = []
@@ -144,9 +148,15 @@ class Model:
             model_pipeline = pipelines[pipeline][0]
             grid = GridSearchCV(model_pipeline, knn_params)
             grid.fit(X, Y)
-            best_k = grid.best_params_
+            best_k = grid.best_params_['n_neighbors']
+            best_leaf_size = grid.best_params_['leaf_size']
+            best_algorithm = grid.best_params_['algorithm']
+            best_weights = grid.best_params_['weights']
             best_score = grid.best_score_
-            l.append({'knn_accuracy': best_score, 'best_k': best_k, 'pipeline': pipelines[pipeline][0],
+            l.append({'knn_accuracy': best_score, 'best_k': best_k, 'best_leaf_size': best_leaf_size,
+                      'best_algorithm': best_algorithm,
+                      'best_weights': best_weights,
+                      'pipeline': pipelines[pipeline][0],
                       'pipeline_cleaned': pipelines[pipeline][1]})
             scores = pd.Series(grid.cv_results_['mean_test_score'])
             scores.index = range(1, k + 1)

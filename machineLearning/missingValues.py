@@ -5,10 +5,23 @@ import pandas as pd
 
 class MissingValue:
     @staticmethod
+    def checkVal(val_to_replace, replace_with_val, x):
+        if pd.isnull(x):
+            if pd.isnull(val_to_replace):
+                return replace_with_val
+            else:
+                return x
+        else:
+            if x == val_to_replace:
+                return replace_with_val
+            else:
+                return x
+
+    @staticmethod
     def replaceValuesInColumns(data, val_to_replace, replace_with_val, columns):
         tmp = data.copy()
         for col in columns:
-            tmp[col] = tmp[col].map(lambda x: x if x != val_to_replace else replace_with_val)
+            tmp[col] = tmp[col].map(lambda x: MissingValue.checkVal(val_to_replace, replace_with_val, x))
         return tmp
 
     @staticmethod
@@ -47,26 +60,8 @@ class MissingValue:
         return imputer, meanValues, dataTransformed
 
 
-# class CustomQuantitativeImputer(TransformerMixin):
-#     def __init__(self, cols=None, strategy='mean'):
-#         self.cols = cols
-#         self.strategy = strategy
-#
-#     def transform(self, df):
-#         X = df.copy()
-#         impute = Imputer(strategy=self.strategy)
-#         for col in self.cols:
-#             X[col] = impute.fit_transform(X[[col]])
-#         return X
-#
-#     def fit(self, *_):
-#         return self
-
-
 class CustomQuantitativeImputer(TransformerMixin):
-    """Transformer for applying label encoder on multiple columns.
-
-    This transformer applies label encoding to columns in a dataset.
+    """Transformer for imputing missing value on specific columns.
     """
 
     def __init__(self, cols, strategy='mean'):
@@ -75,14 +70,14 @@ class CustomQuantitativeImputer(TransformerMixin):
         self.strategy = strategy
 
     def transform(self, X, **transform_params):
-        """Transforms X to have columns label encoded.
+        """Transforms X to impute specific columns.
 
         Args:
             X (obj): The dataset to transform. Can be dataframe or matrix.
             transform_params (kwargs, optional): Additional params.
 
         Returns:
-            The transformed dataset with the label encoded columns.
+            The transformed dataset with imputed columns.
         """
         for col in self.cols:
             X[col] = self.d[col].transform(X[[col]])
@@ -91,7 +86,7 @@ class CustomQuantitativeImputer(TransformerMixin):
     def fit(self, X, y=None, **fit_params):
         """Fits transfomer over X.
 
-        Needs to apply fit over the defaultdict so as to retain the
+        Needs to apply fit over the Imputer separately for each col so as to retain the
         label classes when transforming.
         """
         for col in self.cols:

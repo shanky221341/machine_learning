@@ -29,6 +29,11 @@ class DataSummary:
         res = pd.concat([res, t], axis=0)
         return res
 
+    '''
+    TO DO:
+    Write a function which creates various summary of the Text data
+    '''
+
     @staticmethod
     def showSummaryDataFrame(data):
         print("Number of observations:", data.shape[0])
