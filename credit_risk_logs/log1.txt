@@ -1,0 +1,7 @@
+Password for vberlia@INTERNAL.IMSGLOBAL.COM: 
+Traceback (most recent call last):
+  File "/home/vberlia/credit_risk_spark.py", line 30, in <module>
+    application_train = application_train.toPandas()
+  File "/opt/cloudera/parcels/SPARK2-2.3.0.cloudera3-1.cdh5.13.3.p0.458809/lib/spark2/python/lib/pyspark.zip/pyspark/sql/dataframe.py", line 1935, in toPandas
+  File "/opt/cloudera/parcels/SPARK2-2.3.0.cloudera3-1.cdh5.13.3.p0.458809/lib/spark2/python/lib/pyspark.zip/pyspark/sql/utils.py", line 129, in require_minimum_pandas_version
+ImportError: Pandas >= 0.19.2 must be installed; however, your version was 0.18.1.

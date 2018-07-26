@@ -2,9 +2,9 @@ from zipfile import ZipFile
 import os
 import sys
 
-# directory = sys.argv[1]
+directory = sys.argv[1]
 
-directory = 'machineLearning'
+# directory = 'machineLearning'
 
 print(directory)
 

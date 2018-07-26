@@ -130,12 +130,10 @@ class Model:
 
         k_ = list(range(1, k + 1))
         # knn_params = {'classify__n_neighbors': k_}
-        knn_params = {'classify__n_neighbors': k_,
-                      'classify__leaf_size': [1, 2, 3, 5],
-                      'classify__weights': ['uniform', 'distance'],
-                      'classify__algorithm': ['auto', 'ball_tree', 'kd_tree', 'brute']}
-        # must redefine params to fit the pipeline
-        knn = KNeighborsClassifier()
+        # knn_params = {'classify__n_neighbors': k_,
+        #               'classify__leaf_size': [1, 2, 3, 5],
+        #               'classify__weights': ['uniform', 'distance'],
+        #               'classify__algorithm': ['auto', 'ball_tree', 'kd_tree', 'brute']}
         l = []
         for pipeline in pipelines.keys():
             if 'complete_case' in pipeline:
@@ -148,10 +146,11 @@ class Model:
             model_pipeline = pipelines[pipeline][0]
             grid = GridSearchCV(model_pipeline, knn_params)
             grid.fit(X, Y)
-            best_k = grid.best_params_['n_neighbors']
-            best_leaf_size = grid.best_params_['leaf_size']
-            best_algorithm = grid.best_params_['algorithm']
-            best_weights = grid.best_params_['weights']
+            print(grid.best_params_)
+            best_k = grid.best_params_['classify__n_neighbors']
+            best_leaf_size = grid.best_params_['classify__leaf_size']
+            best_algorithm = grid.best_params_['classify__algorithm']
+            best_weights = grid.best_params_['classify__weights']
             best_score = grid.best_score_
             l.append({'knn_accuracy': best_score, 'best_k': best_k, 'best_leaf_size': best_leaf_size,
                       'best_algorithm': best_algorithm,
