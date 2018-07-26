@@ -118,7 +118,34 @@ class IsNegativeFeature(TransformerMixin):
         """
         X = df.copy()
         for col in self.cols:
-            X.loc[:, col + '_is_negative'] = np.where(X[col] < 0, True, False)
+            X.loc[:, col + '_is_negative'] = np.where(X[col] < 0, 1, 0)
+        return X
+
+    def fit(self, *_):
+        """There is no fit implementation needed."""
+        return self
+
+
+class IsMissingFeature(TransformerMixin):
+    """Transformer for creating a new feature with True if negative on specific columns.
+    """
+
+    def __init__(self, cols):
+        self.cols = cols
+
+    def transform(self, df, **transform_params):
+        """Transforms df to create new feature with specific columns.
+
+        Args:
+            df (obj): The dataset to transform. Can be dataframe or matrix.
+            transform_params (kwargs, optional): Additional params.
+
+        Returns:
+            The transformed dataset with new features columns.
+        """
+        X = df.copy()
+        for col in self.cols:
+            X.loc[:, col + '_is_missing'] = X[col].isnull()*1
         return X
 
     def fit(self, *_):

@@ -79,9 +79,10 @@ class CustomQuantitativeImputer(TransformerMixin):
         Returns:
             The transformed dataset with imputed columns.
         """
+        data = X.copy()
         for col in self.cols:
-            X[col] = self.d[col].transform(X[[col]])
-        return X
+            data[col] = self.d[col].transform(data[[col]])
+        return data
 
     def fit(self, X, y=None, **fit_params):
         """Fits transfomer over X.
