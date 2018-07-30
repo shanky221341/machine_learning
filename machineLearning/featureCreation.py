@@ -145,7 +145,7 @@ class IsMissingFeature(TransformerMixin):
         """
         X = df.copy()
         for col in self.cols:
-            X.loc[:, col + '_is_missing'] = X[col].isnull()*1
+            X.loc[:, col + '_is_missing'] = X[col].isnull() * 1
         return X
 
     def fit(self, *_):
@@ -304,6 +304,7 @@ class CreateOneHotEncoding(TransformerMixin):
         if pd.isnull(self.mlb):
             raise ValueError("Run fit method before trying to transform")
 
+        # print('categorical_col:', self.categorical_column)
         columns = [self.categorical_column.lower() + '_' + item.lower().replace(" ", "_") for item in
                    list(self.mlb.classes_)]
         return data.join(pd.DataFrame(self.mlb.transform(data[self.categorical_column].map(lambda x: [x])),
@@ -314,4 +315,43 @@ class CreateOneHotEncoding(TransformerMixin):
 
         mlb = MultiLabelBinarizer()
         self.mlb = mlb.fit(self.train_data[self.categorical_column].map(lambda x: [x]))
+        return self
+
+
+class ClipOutliers(TransformerMixin):
+    """
+    Clip values based on the quantile range.
+    """
+
+    def __init__(self, numerical_column, clip_upper, clip_lower):
+        self.numerical_column = numerical_column
+        self.clip_upper = clip_upper
+        self.clip_lower = clip_lower
+        self.train_data = None
+        self.upper_bound = None
+        self.lower_bound = None
+
+    def transform(self, X):
+        """
+
+        :param X: New data to be transformed as per info learned from the training data.
+        :param new_col_name: column based on which feature to create
+        :return: X
+        """
+
+        data = X.copy()
+        print("Outlier Working")
+        if pd.isnull(self.upper_bound):
+            raise ValueError("Run fit method before trying to transform")
+
+        new_values = np.clip(data[self.numerical_column], self.upper_bound, self.lower_bound)
+
+        data[self.numerical_column] = new_values
+
+        return data
+
+    def fit(self, X, *_):
+        self.train_data = X
+        self.upper_bound, self.lower_bound = np.percentile(self.train_data[self.numerical_column],
+                                                           [self.clip_lower, self.clip_upper])
         return self

@@ -1,4 +1,5 @@
 import pandas as pd
+import collections
 
 
 class Misc:
@@ -72,3 +73,7 @@ class Misc:
                           'class_1_precision', 'class_1_recall', 'class_1_f1_score', 'class_1_support',
                           'total_precision', 'total_recall', 'total_f1_score', 'total_support']
         return report
+
+    @staticmethod
+    def find_duplicate_in_list(LIST):
+        return [item for item, count in collections.Counter(LIST).items() if count > 1]

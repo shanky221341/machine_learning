@@ -3,6 +3,7 @@ from machineLearning.missingValues import CustomQuantitativeImputer
 from machineLearning.credit_prediction import raw_features
 from machineLearning.featureCreation import CreateFrequencyLookupFeature
 from machineLearning.featureCreation import CreateOneHotEncoding
+from machineLearning.featureCreation import ClipOutliers
 from sklearn.pipeline import Pipeline
 
 miss_columns = raw_features.features.miss_columns
@@ -25,6 +26,12 @@ class CreateFeatures:
         quant_miss_pipes = []
         quant_miss_pipes.append(('miss_impute_cols', CustomQuantitativeImputer(cols=raw_columns, strategy="median")))
 
+        # outlier_pipes = []
+        # outlier_pipes.append(
+        #     ('rem_otlr_' + 'YEARS_BEGINEXPLUATATION_MEDI', ClipOutliers('YEARS_BEGINEXPLUATATION_MEDI', 10, 90)))
+        # outlier_pipes.append(('rem_otlr_' + 'LANDAREA_AVG', ClipOutliers('LANDAREA_AVG', 1, 98)))
+        # outlier_pipes.append(('rem_otlr_' + 'LIVINGAPARTMENTS_MODE', ClipOutliers('LIVINGAPARTMENTS_MODE', 1, 98)))
+
         # Creating freqeuncy feature pipelines
         freq_pipes = []
         for col in freq_columns:
@@ -40,6 +47,7 @@ class CreateFeatures:
         all_pipes.append(Pipeline(quant_miss_pipes))
         all_pipes.append(Pipeline(freq_pipes))
         all_pipes.append(Pipeline(one_hot_pipes))
+        # all_pipes.append(Pipeline(outlier_pipes))
 
         all_pipelines = []
         count = 1

@@ -68,7 +68,19 @@ class features:
                    'ELEVATORS_MODE',
                    'COMMONAREA_AVG',
                    'NONLIVINGAREA_MODE',
-                   'BASEMENTAREA_AVG'
+                   'BASEMENTAREA_AVG',
+
+                   'FLAG_CONT_MOBILE',
+                   'FLAG_DOCUMENT_11', 'FLAG_DOCUMENT_13', 'FLAG_DOCUMENT_14',
+                   'FLAG_DOCUMENT_15', 'FLAG_DOCUMENT_16', 'FLAG_DOCUMENT_17',
+                   'FLAG_DOCUMENT_18', 'FLAG_DOCUMENT_19', 'FLAG_DOCUMENT_20',
+                   'FLAG_DOCUMENT_21', 'FLAG_DOCUMENT_3', 'FLAG_DOCUMENT_4',
+                   'FLAG_DOCUMENT_5', 'FLAG_DOCUMENT_6', 'FLAG_DOCUMENT_7',
+                   'FLAG_DOCUMENT_8', 'FLAG_DOCUMENT_9', 'FLAG_EMAIL', 'FLAG_EMP_PHONE',
+                   'FLAG_PHONE', 'FLAG_WORK_PHONE', 'LIVE_CITY_NOT_WORK_CITY',
+                   'LIVE_REGION_NOT_WORK_REGION', 'REG_CITY_NOT_LIVE_CITY',
+                   'REG_CITY_NOT_WORK_CITY', 'REG_REGION_NOT_LIVE_REGION',
+                   'REG_REGION_NOT_WORK_REGION'
                    ]
     raw_columns = list(set(raw_columns))
     miss_columns = raw_columns
@@ -175,5 +187,25 @@ class features:
                        ]
 
     one_hot_columns = ['NAME_CONTRACT_TYPE', 'CODE_GENDER', 'FLAG_OWN_CAR',
-                       'FLAG_OWN_REALTY', 'OCCUPATION_TYPE', 'ORGANIZATION_TYPE']
-    cat_miss_columns = ['OCCUPATION_TYPE']
+                       'FLAG_OWN_REALTY', 'OCCUPATION_TYPE', 'ORGANIZATION_TYPE'
+                       ]
+
+    # one_hot_columns = ['CODE_GENDER', 'FLAG_CONT_MOBILE', 'FLAG_DOCUMENT_10',
+    #                    'FLAG_DOCUMENT_11', 'FLAG_DOCUMENT_12', 'FLAG_DOCUMENT_13',
+    #                    'FLAG_DOCUMENT_14', 'FLAG_DOCUMENT_15', 'FLAG_DOCUMENT_16',
+    #                    'FLAG_DOCUMENT_17', 'FLAG_DOCUMENT_18', 'FLAG_DOCUMENT_19',
+    #                    'FLAG_DOCUMENT_2', 'FLAG_DOCUMENT_20', 'FLAG_DOCUMENT_21',
+    #                    'FLAG_DOCUMENT_3', 'FLAG_DOCUMENT_4', 'FLAG_DOCUMENT_5',
+    #                    'FLAG_DOCUMENT_6', 'FLAG_DOCUMENT_7', 'FLAG_DOCUMENT_8',
+    #                    'FLAG_DOCUMENT_9', 'FLAG_EMAIL', 'FLAG_EMP_PHONE', 'FLAG_MOBIL',
+    #                    'FLAG_OWN_CAR', 'FLAG_OWN_REALTY', 'FLAG_PHONE', 'FLAG_WORK_PHONE',
+    #                    'LIVE_CITY_NOT_WORK_CITY', 'LIVE_REGION_NOT_WORK_REGION',
+    #                    'NAME_CONTRACT_TYPE', 'NAME_EDUCATION_TYPE', 'NAME_FAMILY_STATUS',
+    #                    'NAME_HOUSING_TYPE', 'NAME_INCOME_TYPE', 'ORGANIZATION_TYPE',
+    #                    'REGION_RATING_CLIENT', 'REGION_RATING_CLIENT_W_CITY',
+    #                    'REG_CITY_NOT_LIVE_CITY', 'REG_CITY_NOT_WORK_CITY',
+    #                    'REG_REGION_NOT_LIVE_REGION', 'REG_REGION_NOT_WORK_REGION',
+    #                    'WEEKDAY_APPR_PROCESS_START', 'OCCUPATION_TYPE']
+
+
+cat_miss_columns = ['OCCUPATION_TYPE']
