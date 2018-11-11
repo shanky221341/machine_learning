@@ -3,7 +3,6 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import roc_auc_score
 from machineLearning.misc import Misc
 
-
 class ClassificationReport:
     @staticmethod
     def showClassificationReport(prediction_result):

@@ -355,3 +355,128 @@ class ClipOutliers(TransformerMixin):
         self.upper_bound, self.lower_bound = np.percentile(self.train_data[self.numerical_column],
                                                            [self.clip_lower, self.clip_upper])
         return self
+
+
+class CreateAggregateStatisticFeature(TransformerMixin):
+    """
+    Transformer for creating a new feature with mean of numerical column based on the mean of categorical column.
+    """
+
+    def __init__(self, categorical_column1, categorical_column2=None, numerical_cols_list=None,
+                 categorical_col_list=None,
+                 multiline_data=None,
+                 statistics_type='mean'):
+        self.categorical_column1 = categorical_column1
+        self.categorical_column2 = categorical_column2
+        self.numerical_cols_list = numerical_cols_list
+        self.categorical_col_list = categorical_col_list
+        self.multiline_data = multiline_data
+        self.statistics_type = statistics_type
+
+    def transform(self, X):
+        """
+
+        :param X: New data to be transformed as per info learned from the training data.
+        :param new_col_name: column based on which feature to create
+        :return: X
+        """
+
+        data = X.copy()
+
+        if self.statistics_type == 'mean':
+            for col in self.numerical_cols_list:
+                # print(self.categorical_column2, self.statistics_type, col)
+                grouped_data = self.multiline_data.groupby([self.categorical_column1, self.categorical_column2])[
+                    col].mean().reset_index()
+                grouped_data.columns = [self.categorical_column1, self.categorical_column2, 'value']
+
+                grouped_data = grouped_data.pivot(index=self.categorical_column1,
+                                                  columns=self.categorical_column2, values='value').reset_index()
+
+                grouped_data = grouped_data.fillna(0)
+
+                pivot_cols = [self.statistics_type + '_by_' + self.categorical_column2.lower().replace(' ',
+                                                                                                       '_') + '_' + item.lower().replace(
+                    ' ', '_') + '_of_' + col.lower().replace(' ', '_') for item in
+                              list(set(self.multiline_data[self.categorical_column2]))]
+                pivot_cols.insert(0, self.categorical_column1)
+
+                grouped_data.columns = pivot_cols
+
+                data = pd.merge(data,
+                                grouped_data,
+                                on=self.categorical_column1,
+                                how='left')
+        elif self.statistics_type == 'median':
+            for col in self.numerical_cols_list:
+                # print(self.categorical_column2, self.statistics_type, col)
+                grouped_data = self.multiline_data.groupby([self.categorical_column1, self.categorical_column2])[
+                    col].median().reset_index()
+                grouped_data.columns = [self.categorical_column1, self.categorical_column2, 'value']
+
+                grouped_data = grouped_data.pivot(index=self.categorical_column1,
+                                                  columns=self.categorical_column2, values='value').reset_index()
+
+                grouped_data = grouped_data.fillna(0)
+
+                pivot_cols = [self.statistics_type + '_by_' + self.categorical_column2.lower().replace(' ',
+                                                                                                       '_') + '_' + item.lower().replace(
+                    ' ', '_') + '_of_' + col.lower().replace(' ', '_') for item in
+                              list(set(self.multiline_data[self.categorical_column2]))]
+                pivot_cols.insert(0, self.categorical_column1)
+
+                grouped_data.columns = pivot_cols
+
+                data = pd.merge(data,
+                                grouped_data,
+                                on=self.categorical_column1,
+                                how='left')
+        elif self.statistics_type == 'count':
+            for col in self.categorical_col_list:
+                grouped_data = self.multiline_data.groupby([self.categorical_column1, col])[col].count()
+                grouped_data = pd.DataFrame(grouped_data)
+                grouped_data.columns = ['count']
+                grouped_data = grouped_data.reset_index()
+                grouped_data.columns = [self.categorical_column1, col, 'value']
+                grouped_data = grouped_data.pivot(index=self.categorical_column1,
+                                                  columns=col, values='value').reset_index()
+                pivot_cols = [self.statistics_type + '_by_' + col.lower().replace(' ',
+                                                                                  '_') + '_' + item.lower().replace(
+                    ' ', '_') for item in
+                              list(set(self.multiline_data[col]))]
+                pivot_cols.insert(0, self.categorical_column1)
+                grouped_data.columns = pivot_cols
+                data = pd.merge(data,
+                                grouped_data,
+                                on=self.categorical_column1,
+                                how='left')
+        elif self.statistics_type == 'count_distinct':
+            for col in self.categorical_column1:
+                grouped_data = self.multiline_data.groupby([self.categorical_column1])[col].nunique().reset_index()
+                grouped_data.columns = [self.categorical_column1, col.lower() + '_distinct']
+                data = pd.merge(data,
+                                grouped_data,
+                                on=self.categorical_column1,
+                                how='left')
+        elif self.statistics_type == 'mean_one_categorical':
+            for col in self.numerical_cols_list:
+                grouped_data = self.multiline_data.groupby([self.categorical_column1])[col].mean().reset_index()
+                grouped_data.columns = [self.categorical_column1, col.lower() + '_mean']
+                data = pd.merge(data,
+                                grouped_data,
+                                on=self.categorical_column1,
+                                how='left')
+        elif self.statistics_type == 'median_one_categorical':
+            for col in self.numerical_cols_list:
+                grouped_data = self.multiline_data.groupby([self.categorical_column1])[col].median().reset_index()
+                grouped_data.columns = [self.categorical_column1, col.lower() + '_median']
+                data = pd.merge(data,
+                                grouped_data,
+                                on=self.categorical_column1,
+                                how='left')
+        data = data.fillna(0)
+        #        self.multiline_data = None
+        return data
+
+    def fit(self, X, *_):
+        return self
